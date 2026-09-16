@@ -1,4 +1,5 @@
 {
+    "version": 1,
     "name": "CubeControl",
     "maps": [
         {
@@ -9,7 +10,16 @@
                     "name": "XAxis",
                     "type": "Button",
                     "id": "2a2a59da-fde1-4f81-ad7a-11631e8f3acb",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "71380f51-1e65-4bb6-933a-5fe5ebe1b637",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -41,7 +51,7 @@
                 {
                     "name": "negative",
                     "id": "10dac793-cd35-45ee-ac9a-4ff470abe4ad",
-                    "path": "<Keyboard>/q",
+                    "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -68,6 +78,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "XAxis",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "1D Axis",
+                    "id": "a651ad9b-5caf-455a-8e56-fea214c747f3",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "Positive",
+                    "id": "82a63af5-8f0a-48d8-a49d-c3000ac7f753",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": true
                 }
