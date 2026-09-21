@@ -1,14 +1,13 @@
 using UnityEngine;
-using UnityEngine.Scripting.APIUpdating;
+[RequireComponent(typeof(Collider))]
 
-public class FinishLine : MonoBehaviour
+public class ObstacleMakeRespawn : MonoBehaviour
 {
-
     void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent(out PlayerControl pc))
         {
-            pc.Stop();
+            pc.Respawn();
         }
     }
 }

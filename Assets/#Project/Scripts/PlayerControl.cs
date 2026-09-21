@@ -3,59 +3,88 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine;
 using System;
+using System.Linq.Expressions;
+using Unity.VisualScripting;
+[RequireComponent(typeof(Rigidbody))]
 
 public class PlayerControl : MonoBehaviour
 {
+    const string ACTION_MAP = "CubeActionsMap";
+    const string X_AXIS_ACTION = "XAxis";
+    const string JUMP_ACTION = "Jump";
+    private const float CHECK_GROUND_LENGTH = 0.55f;
 
-    [SerializeField] float force = 1f;
-    public InputActionAsset actions;
+    [Tooltip ("Force de saut en newton")]
+    [SerializeField] float force = 350f;
     public float speed = 1f;
+    [SerializeField]private InputActionAsset actions;
     private InputAction xAxis;
-    private InputAction jump;
-
-    bool isJumpig = false;
-    
+    private InputAction jump;   
+    Vector3 startpos; 
 
     void Awake()
     {
-        transform.position = new Vector3(0,1,-100);
-        xAxis = actions.FindActionMap("CubeActionsMap").FindAction("XAxis");
-        jump = actions.FindActionMap("CubeActionsMap").FindAction("Jump");
-        isJumpig = false;
+        startpos = new Vector3(0,1,-100);
+        Respawn();
+        xAxis = actions.FindActionMap(ACTION_MAP).FindAction(X_AXIS_ACTION);
+        jump = actions.FindActionMap(ACTION_MAP).FindAction(JUMP_ACTION);
+        jump.performed += ctx => { OnJump(ctx); };
     }
+
 
     void OnEnable()
     {
-        actions.FindActionMap("CubeActionsMap").Enable();
+        actions.FindActionMap(ACTION_MAP).Enable();
     }
 
     void OnDisable()
     {
-        actions.FindActionMap("CubeActionsMap").Disable();
+        actions.FindActionMap(ACTION_MAP).Disable();
     }
 
     void Update()
     {   
-        MoveX();
+        MoveX(); 
+        Autoforward();
         // if (gameObject is on the ground) {}
-        MoveY();
     }
 
 
     private void MoveX()
     {
         float xMove = xAxis.ReadValue<float>();
-        // bouge automatiquement
-        transform.position += transform.forward * (speed / 2) * Time.deltaTime;
-
         // bouge selon input gauche/droite
-
-            transform.position += speed  * Time.deltaTime * xMove * transform.right;            
+        transform.position += speed * Time.deltaTime * xMove * transform.right;
     }
-    private void MoveY()
-    {
-            float yMove = jump.ReadValue<float>();
-            transform.position += force  * Time.deltaTime * yMove * transform.up;
 
+    private void Autoforward()
+    {
+        // avance automatiquement
+        transform.position += speed  * Time.deltaTime * transform.forward;
+    }
+
+
+    private void OnJump(InputAction.CallbackContext ctx)
+    {
+        if (isGrounded())
+        {
+            GetComponent<Rigidbody>().AddForce( force * Vector3.up);    
+        }
+    }
+
+    private bool isGrounded()
+    {
+        Ray ray = new(transform.position,Vector3.down);
+            return Physics.Raycast(ray,CHECK_GROUND_LENGTH * transform.localScale.y);
+    }
+
+    public void Respawn()
+    {
+        transform.position = startpos;
+    }
+
+    public void Stop()
+    {
+        speed = 0;
     }
 }
